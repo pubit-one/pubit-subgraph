@@ -1,0 +1,5 @@
+
+type ContentType @entity {
+  id:ID!
+  name:Bytes!
+}

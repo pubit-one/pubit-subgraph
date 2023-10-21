@@ -1,0 +1,29 @@
+specVersion: 0.0.6
+description: Pubit subgraph v1
+repository: https://github.com/pubit-one/pubit-subgraph
+features:
+  - ipfsOnEthereumContracts
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: LicenseRegistry
+    network: {{NETWORK}}
+    source:
+      address: '{{CONTRACT_LICENSE_REGISTRY_ADDRESS}}'
+      abi: LicenseRegistry
+      startBlock: {{CONTRACT_LICENSE_REGISTRY_START_BLOCK}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - ContentType
+      abis:
+        - name: LicenseRegistry
+          file: ./abis/LicenseRegistry.json
+      eventHandlers:
+        - event: contentTypeAdded(bytes32)
+          handler: handleAddContentType
+      file: ./src/mappings/LicenseRegistry.ts      
+

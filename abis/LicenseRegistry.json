@@ -1,0 +1,670 @@
+{
+  "contractName": "LicenseRegistry",
+  "abi":  [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_accessRestrictionAddress",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_action",
+          "type": "bytes32"
+        }
+      ],
+      "name": "ActionAlreadyExists",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "arraySize",
+          "type": "uint256"
+        }
+      ],
+      "name": "ActionCountExeeded",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_contractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes4",
+          "name": "_action",
+          "type": "bytes4"
+        }
+      ],
+      "name": "ActionUsedBefore",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_contentType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "ContentTypeExists",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_contentType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "ContentTypeNotSupported",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_contractAddress",
+          "type": "address"
+        }
+      ],
+      "name": "ContractAddressExist",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_contractAddress",
+          "type": "address"
+        }
+      ],
+      "name": "InvalidContractAddress",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_licenseType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "LicenseTypeNotSupported",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "action",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "enum LicenseLib.ActionCat",
+          "name": "actionType",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "enum LicenseLib.ActionReturn",
+          "name": "actionReturn",
+          "type": "uint8"
+        }
+      ],
+      "name": "actionDataAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32[]",
+          "name": "_actions",
+          "type": "bytes32[]"
+        },
+        {
+          "indexed": false,
+          "internalType": "enum LicenseLib.ActionCat",
+          "name": "actionType",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "enum LicenseLib.ActionReturn",
+          "name": "actionReturn",
+          "type": "uint8"
+        }
+      ],
+      "name": "actionDataUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "contentType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "contentTypeAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "license",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "action",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes4",
+          "name": "oldAction",
+          "type": "bytes4"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes4",
+          "name": "newAction",
+          "type": "bytes4"
+        }
+      ],
+      "name": "licenseCallDataUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "licenseType",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "contractAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes4[]",
+          "name": "actions",
+          "type": "bytes4[]"
+        }
+      ],
+      "name": "licenseContractAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "templateId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "licenseType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "licenseTypeAdded",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "accessRestriction",
+      "outputs": [
+        {
+          "internalType": "contract IAccessRestriction",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "actionData",
+      "outputs": [
+        {
+          "internalType": "uint128",
+          "name": "index",
+          "type": "uint128"
+        },
+        {
+          "internalType": "enum LicenseLib.ActionCat",
+          "name": "actionType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "enum LicenseLib.ActionReturn",
+          "name": "actionReturn",
+          "type": "uint8"
+        },
+        {
+          "internalType": "bool",
+          "name": "exists",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint32",
+          "name": "reserved",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "reserved2",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "reserved3",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes4",
+          "name": "",
+          "type": "bytes4"
+        }
+      ],
+      "name": "actionUsages",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "actions",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_action",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "enum LicenseLib.ActionCat",
+          "name": "_actionType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "enum LicenseLib.ActionReturn",
+          "name": "_actionReturn",
+          "type": "uint8"
+        }
+      ],
+      "name": "addActionData",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_contentType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "addContentType",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_contractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes4[]",
+          "name": "_actions",
+          "type": "bytes4[]"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_contentType",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_licenseType",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint96",
+          "name": "_templateId",
+          "type": "uint96"
+        }
+      ],
+      "name": "addLicenseContract",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_licenseType",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_contentType",
+          "type": "bytes32"
+        }
+      ],
+      "name": "addLincenseType",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "contentTypes",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_license",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_action",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getLicenseActions",
+      "outputs": [
+        {
+          "internalType": "bytes4",
+          "name": "",
+          "type": "bytes4"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_license",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getLicenseContracts",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "contentType",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "licenseType",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "address",
+              "name": "contractAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "uint96",
+              "name": "templateId",
+              "type": "uint96"
+            }
+          ],
+          "internalType": "struct LicenseLib.LicenseMetadata",
+          "name": "",
+          "type": "tuple"
+        },
+        {
+          "internalType": "bytes4[]",
+          "name": "",
+          "type": "bytes4[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "licenseActions",
+      "outputs": [
+        {
+          "internalType": "bytes4",
+          "name": "",
+          "type": "bytes4"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "licenseContracts",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "licenseTemplates",
+      "outputs": [
+        {
+          "internalType": "uint96",
+          "name": "",
+          "type": "uint96"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "licenseTypes",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "contentType",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "licenseType",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "contractAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint96",
+          "name": "templateId",
+          "type": "uint96"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32[]",
+          "name": "_actions",
+          "type": "bytes32[]"
+        },
+        {
+          "internalType": "enum LicenseLib.ActionCat",
+          "name": "_actionType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "enum LicenseLib.ActionReturn",
+          "name": "_actionReturn",
+          "type": "uint8"
+        }
+      ],
+      "name": "setActionData",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_license",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes4",
+          "name": "_action",
+          "type": "bytes4"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_type",
+          "type": "bytes32"
+        }
+      ],
+      "name": "updateLicenseActions",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}
